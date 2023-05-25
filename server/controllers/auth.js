@@ -42,7 +42,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.status(404).json({ erorr: "User does not exits" });
+      return res.status(404).json({ erorr: "User does not exits"  });
     }
 
     const isMatch = await bycrpt.compare(password, user.password);
