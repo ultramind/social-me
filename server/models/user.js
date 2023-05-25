@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    firstname: {
+    firstName: {
       type: String,
       required: true,
       min: 2,
       max: 50,
     },
-    lastname: {
+    lastName: {
       type: String,
       required: true,
       min: 2,
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
     },
     picturePath: {
       type: String,
-      default: "",  
+      default: "",
     },
     friends: {
       type: Array,

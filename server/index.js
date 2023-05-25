@@ -11,6 +11,14 @@ import { fileURLToPath } from "url";
 import { register } from "./controllers/auth.js";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
+import postRoutes from "./routes/posts.js";
+import { verifyUser } from "./middleware/auth.js";
+import { createPosts } from "./controllers/posts.js";
+
+// contants datas
+import Post from "./models/post.js";
+import User from "./models/user.js";
+import { users, posts } from "./data/index.js";
 
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
@@ -40,11 +48,14 @@ const upload = multer({ storage });
 
 // ROUTES WITH FILES
 app.post("/auth/register", upload.single("picture"), register);
+app.post("/posts", verifyUser, upload.single("picture"), createPosts);
+
 app.get("/", (req, res) => res.send("Welcome to social-me"));
 
 // All ROutes
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/posts", postRoutes);
 
 // Mongoose setup
 const PORT = process.env.PORT || 6001;
@@ -56,5 +67,8 @@ mongoose
   })
   .then(() => {
     app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
+    // adding contants once
+    // User.insertMany(users);
+    // Post.insertMany(posts);
   })
   .catch((error) => console.log(`${error} did not connect`));
