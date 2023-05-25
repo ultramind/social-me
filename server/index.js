@@ -10,6 +10,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { register } from "./controllers/auth.js";
 import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
 
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
@@ -43,6 +44,7 @@ app.get("/", (req, res) => res.send("Welcome to social-me"));
 
 // All ROutes
 app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
 
 // Mongoose setup
 const PORT = process.env.PORT || 6001;
