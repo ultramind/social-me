@@ -1,10 +1,12 @@
-
-import React from 'react'
+import React from "react";
+import NavBar from "../navBar";
 
 const HomePage = () => {
   return (
-    <div>HomePage</div>
-  )
-}
+    <div>
+      <NavBar />
+    </div>
+  );
+};
 
-export default HomePage
+export default HomePage;
