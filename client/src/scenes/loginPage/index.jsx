@@ -1,25 +1,46 @@
 import React, { useState } from "react";
-// import { useFormik } from "formik";
+import { useFormik } from "formik";
 
 const LoginPage = () => {
-  const [page, setPage] = useState("register");
-  // initial Register values
-  // const loginInitialValues = {
-  //   firstName: "",
-  //   lastName: "",
-  //   email: "",
-  //   occupation: "",
-  //   password: "",
-  //   picture: null,
-  // };
+  const [isLogin, setIsLogin] = useState(true);
 
-  // const registerInitialValues = {
-  //   email: "",
-  //   password: "",
-  // };
-  // const { values } = useFormik({
-  //   initialValues,
-  // });
+  // hadling th submit function
+  // handleSubmit
+  const onSubmitForm = (values, actions) => {
+    console.log(values);
+    console.log(actions);
+    alert("Submitted...");
+  };
+
+  // initial Register values
+  const registerInitialValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    occupation: "",
+    password: "",
+    picture: null,
+  };
+
+  const loginInitialValues = {
+    email: "",
+    password: "",
+  };
+  const {
+    values,
+    handleChange,
+    handleBlur,
+    errors,
+    setFieldValue,
+    handleSubmit,
+    resetForm,
+  } = useFormik({
+    initialValues: isLogin ? loginInitialValues : registerInitialValues,
+    onSubmit: onSubmitForm,
+  });
+
+  console.log(isLogin);
+  console.log(values);
 
   return (
     <>
@@ -32,8 +53,8 @@ const LoginPage = () => {
         <div className="w-[80%] md:w-1/2 bg-white p-4 rounded-xl shadow-lg">
           <p>Welcome to socialme, a social mmedia for programmers...</p>
 
-          <form>
-            {page === "register" && (
+          <form onSubmit={handleSubmit}>
+            {!isLogin && (
               <>
                 <div className="flex flex-col md:flex-row justify-between gap-6">
                   <label class="block mt-4 flex-1">
@@ -42,6 +63,9 @@ const LoginPage = () => {
                     </span>
                     <input
                       id="firstName"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.firstName}
                       type="text"
                       placeholder="Firstname"
                       class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
@@ -55,6 +79,9 @@ const LoginPage = () => {
                     <input
                       id="lastName"
                       type="text"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.lastName}
                       placeholder="LastName"
                       class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
                 focus:outline-none"
@@ -70,6 +97,9 @@ const LoginPage = () => {
                     <input
                       id="occupation"
                       type="text"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.occupation}
                       placeholder="Occupation"
                       class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
                 focus:outline-none"
@@ -80,8 +110,11 @@ const LoginPage = () => {
                       Location
                     </span>
                     <input
-                      id="text"
+                      id="location"
                       type="text"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.location}
                       placeholder="Location"
                       class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
                 focus:outline-none"
@@ -105,7 +138,7 @@ const LoginPage = () => {
             )}
             <div
               className={`justify-between flex flex-col ${
-                page === "login" ? "md:flex-col" : "md:flex-row"
+                isLogin ? "md:flex-col" : "md:flex-row"
               } gap-4`}
             >
               <label class="block mt-4 flex-1">
@@ -115,6 +148,9 @@ const LoginPage = () => {
                 <input
                   id="email"
                   type="email"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.email}
                   placeholder="Email Address"
                   class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
                 focus:outline-none"
@@ -127,6 +163,9 @@ const LoginPage = () => {
                 <input
                   id="password"
                   type="password"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.password}
                   placeholder="Password"
                   class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
                 focus:outline-none"
@@ -134,28 +173,23 @@ const LoginPage = () => {
               </label>
             </div>
             <button
-              type="button"
+              type="submit"
               className="mt-4 p-2 w-full  bg-primary rounded-lg text-white text-xl font-bold"
             >
-              {page === "register" ? "Register" : "Login"}
+              {isLogin ? "login" : "register"}
             </button>
           </form>
-          {page === "register" && (
-            <p
-              className="text-primary mt-6 cursor-pointer"
-              onClick={() => setPage("login")}
-            >
-              If you have an account with us Login
-            </p>
-          )}
-          {page === "login" && (
-            <p
-              className="text-primary mt-6 cursor-pointer"
-              onClick={() => setPage("register")}
-            >
-              If you dont have an account with us Register
-            </p>
-          )}
+          <p
+            className="text-primary mt-6 cursor-pointer"
+            onClick={() => {
+              setIsLogin(!isLogin);
+              resetForm();
+            }}
+          >
+            {isLogin
+              ? "If you dont have an account with us Register"
+              : "If you have an account with us Login"}
+          </p>
         </div>
       </div>
     </>
