@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { loginValidationSchema, registerValidationSchema } from "../../schema";
-// import { setLogin } from "state";
+import { setLogin } from "../../state";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
 
   // Login function
@@ -33,7 +35,8 @@ const LoginPage = () => {
       for (let value in values) {
         formData.append(value, values[value]);
       }
-      formData.append("picturePath", values["picture"].name);
+      formData.append("picturePath", values.picture.name);
+      console.log(formData);
 
       const saveUserResponse = await fetch(
         "http://localhost:3001/auth/register",
@@ -46,6 +49,7 @@ const LoginPage = () => {
       formikActions.resetForm();
       if (savedUser) {
         setIsLogin(true);
+        alert("Registration Successful!");
       }
     } catch (error) {
       console.log(error);
@@ -55,8 +59,11 @@ const LoginPage = () => {
   // hadling th submit function
   // handleSubmit
   const onSubmitForm = async (values, formikActions) => {
-    // if (isLogin) await login(values, formikActions);
-    if (!isLogin) await register(values, formikActions);
+    if (isLogin) {
+      await login(values, formikActions);
+    } else {
+      await register(values, formikActions);
+    }
   };
 
   // initial Register values
