@@ -6,8 +6,8 @@ import User from "../models/user.js";
 export const register = async (req, res) => {
   try {
     const {
-      firstname,
-      lastname,
+      firstName,
+      lastName,
       email,
       password,
       picturePath,
@@ -19,8 +19,8 @@ export const register = async (req, res) => {
     const passwordHarsh = await bycrpt.hash(password, salt);
 
     const newUser = new User({
-      firstname,
-      lastname,
+      firstName,
+      lastName,
       email,
       password: passwordHarsh,
       picturePath,
@@ -42,7 +42,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.status(404).json({ erorr: "User does not exits"  });
+      return res.status(404).json({ erorr: "User does not exits" });
     }
 
     const isMatch = await bycrpt.compare(password, user.password);
