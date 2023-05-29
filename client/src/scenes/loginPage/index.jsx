@@ -1,15 +1,62 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
+import { loginValidationSchema, registerValidationSchema } from "../../schema";
+// import { setLogin } from "state";
+import { useDispatch } from "react-redux";
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(true);
+
+  // Login function
+  const login = async (values, formikActions) => {
+    const loggedInResponse = await fetch(
+      "http://localhost:3001/auth/register",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      }
+    );
+    const loggedIn = await loggedInResponse.json();
+    formikActions.resetForm();
+    if (loggedIn) {
+      dispatch(setLogin({ user: loggedIn.user, token: loggedIn.token }));
+      navigate("/home");
+    }
+  };
+
+  // register function
+  const register = async (values, formikActions) => {
+    try {
+      const formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
+      }
+      formData.append("picturePath", values["picture"].name);
+
+      const saveUserResponse = await fetch(
+        "http://localhost:3001/auth/register",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const savedUser = await saveUserResponse.json();
+      formikActions.resetForm();
+      if (savedUser) {
+        setIsLogin(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // hadling th submit function
   // handleSubmit
-  const onSubmitForm = (values, actions) => {
-    console.log(values);
-    console.log(actions);
-    alert("Submitted...");
+  const onSubmitForm = async (values, formikActions) => {
+    // if (isLogin) await login(values, formikActions);
+    if (!isLogin) await register(values, formikActions);
   };
 
   // initial Register values
@@ -36,10 +83,13 @@ const LoginPage = () => {
     resetForm,
   } = useFormik({
     initialValues: isLogin ? loginInitialValues : registerInitialValues,
+    validationSchema: isLogin
+      ? loginValidationSchema
+      : registerValidationSchema,
     onSubmit: onSubmitForm,
   });
 
-  console.log(isLogin);
+  console.log(errors);
   console.log(values);
 
   return (
@@ -68,9 +118,12 @@ const LoginPage = () => {
                       value={values.firstName}
                       type="text"
                       placeholder="Firstname"
-                      class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-                focus:outline-none"
+                      class={`mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+                focus:outline-none ${errors.firstName && "border-primary"}`}
                     />
+                    <span className="text-xs text-primary">
+                      {errors.firstName}
+                    </span>
                   </label>
                   <label class="block md:mt-4 flex-1">
                     <span class="block text-sm text-slate-700 font-bold">
@@ -83,9 +136,12 @@ const LoginPage = () => {
                       onBlur={handleBlur}
                       value={values.lastName}
                       placeholder="LastName"
-                      class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-                focus:outline-none"
+                      class={`mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+                focus:outline-none ${errors.lastName && "bordeer-primary"}`}
                     />
+                    <span className="text-xs text-primary">
+                      {errors.lastName}
+                    </span>
                   </label>
                 </div>
 
@@ -101,9 +157,12 @@ const LoginPage = () => {
                       onBlur={handleBlur}
                       value={values.occupation}
                       placeholder="Occupation"
-                      class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-                focus:outline-none"
+                      class={`mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+                focus:outline-none ${errors.occupation && "border-primary"}`}
                     />
+                    <span className="text-xs text-primary">
+                      {errors.occupation}
+                    </span>
                   </label>
                   <label class="block md:mt-4 flex-1">
                     <span class="block text-sm text-slate-700 font-bold">
@@ -116,9 +175,12 @@ const LoginPage = () => {
                       onBlur={handleBlur}
                       value={values.location}
                       placeholder="Location"
-                      class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-                focus:outline-none"
+                      class={`mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+                focus:outline-none ${errors.location && "border-primary"}`}
                     />
+                    <span className="text-xs text-primary">
+                      {errors.location}
+                    </span>
                   </label>
                 </div>
                 <div className="justify-between flex flex-col md:flex-row gap-6">
@@ -129,9 +191,16 @@ const LoginPage = () => {
                     <input
                       id="picture"
                       type="file"
-                      class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-                focus:outline-none"
+                      onChange={(e) =>
+                        setFieldValue("picture", e.target.files[0])
+                      }
+                      onBlur={handleBlur}
+                      class={`"mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+                focus:outline-none ${errors.picture && "border-primary"}`}
                     />
+                    <span className="text-xs text-primary">
+                      {errors.picture}
+                    </span>
                   </label>
                 </div>
               </>
@@ -152,11 +221,12 @@ const LoginPage = () => {
                   onBlur={handleBlur}
                   value={values.email}
                   placeholder="Email Address"
-                  class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-                focus:outline-none"
+                  class={`mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+                focus:outline-none ${errors.email && "border-primary"}`}
                 />
+                <span className="text-xs text-primary">{errors.email}</span>
               </label>
-              <label class="block md:mt-4 flex-1">
+              <label class={`block flex-1 ${!isLogin && "mt-4"}`}>
                 <span class="block text-sm text-slate-700 font-bold">
                   Password
                 </span>
@@ -167,9 +237,10 @@ const LoginPage = () => {
                   onBlur={handleBlur}
                   value={values.password}
                   placeholder="Password"
-                  class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-                focus:outline-none"
+                  class={`mt-1 block w-full  px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+                focus:outline-none ${errors.password && "border-primary"}`}
                 />
+                <span className="text-xs text-primary">{errors.password}</span>
               </label>
             </div>
             <button
