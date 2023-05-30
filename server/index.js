@@ -54,7 +54,7 @@ app.get("/", (req, res) => res.send("Welcome to social-me"));
 
 // All ROutes
 app.use("/auth", authRoutes);
-app.use("/user", userRoutes);
+app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 
 // Mongoose setup
