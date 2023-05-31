@@ -43,14 +43,13 @@ const UserWidget = ({ userId }) => {
   const fullName = firstName + " " + lastName;
 
   return (
-    <div className="w-[20%] bg-white p-4 shadow-lg rounded-xl h-auto">
+    <div className="w-[23%] bg-white p-4 shadow-lg rounded-xl h-auto">
       {/* First row */}
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center gap-4">
           <UserImage image={picturePath} />
           <div>
-            <h3>{fullName}</h3>
-            {/* <h3>{friends.length}</h3> */}
+            <strong>{fullName}</strong>
             <h3>{3} Friends</h3>
           </div>
         </div>

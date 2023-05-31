@@ -1,15 +1,21 @@
 import Post from "../models/post.js";
+import User from "../models/user.js";
 
 export const createPosts = async (req, res) => {
   try {
-    const { userId, description, picturePath } = re.body;
+    const { userId, description, picturePath } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
     const newPost = new Post({
+      userId,
       firstName: user.firstName,
       lastName: user.lastName,
       location: user.location,
       description,
-      userPictureAth: user.picturePath,
-      pictuePath,
+      userPicturePath: user.picturePath,
+      picturePath,
       likes: {},
       commets: [],
     });
@@ -18,7 +24,8 @@ export const createPosts = async (req, res) => {
     const post = await Post.find();
     res.status(201).json(post);
   } catch (error) {
-    res.status(409).json({ message: error });
+    res.status(400).json({ message: error });
+    console.log(error.message);
   }
 };
 
