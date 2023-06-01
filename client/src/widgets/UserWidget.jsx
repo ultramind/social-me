@@ -43,7 +43,7 @@ const UserWidget = ({ userId }) => {
   const fullName = firstName + " " + lastName;
 
   return (
-    <div className="w-[23%] bg-white p-4 shadow-lg rounded-xl h-auto">
+    <div className="w-full md:w-[23%] bg-white p-4 shadow-lg rounded-xl h-auto">
       {/* First row */}
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center gap-4">

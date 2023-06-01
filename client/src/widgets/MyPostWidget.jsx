@@ -41,7 +41,7 @@ const MyPostWidget = ({ picturePath }) => {
   };
 
   return (
-    <div className="flex flex-col w-[50%]">
+    <div className="flex flex-col w-full md:w-[50%]">
       <div className="w-full p-6 bg-white rounded-xl shadow-xl h-auto mb-9">
         {/* first row */}
         <div className="flex w-full gap-6 justify-between mb-6">
@@ -69,7 +69,7 @@ const MyPostWidget = ({ picturePath }) => {
         </div>
         <hr className="border-6 border-gray-300 my-4" />
         {/* Third Row */}
-        <div className={`flex justify-between items-center`}>
+        <div className={`flex justify-between items-center flex-wrap gap-2`}>
           <div
             className="flex gap-4 items-center cursor-pointer"
             onClick={() => setIsImage(!isImage)}
