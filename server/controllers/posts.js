@@ -53,8 +53,9 @@ export const getUserPosts = async (req, res) => {
 export const likePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.user;
+    const { userId } = req.body;
     const post = await Post.findById(id);
+
     // check if user id exits
     const isliked = post.likes.get(userId);
     if (isliked) {
@@ -63,13 +64,14 @@ export const likePost = async (req, res) => {
       post.likes.set(userId, true);
     }
 
-    const updatedPost = await findOneByIdAndUdate(
+    const updatedPost = await Post.findByIdAndUpdate(
       id,
       { likes: post.likes },
       { new: true }
     );
     res.status(200).json(updatedPost);
   } catch (error) {
+    console.log(error);
     res.status(409).json({ message: error });
   }
 };

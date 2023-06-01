@@ -10,7 +10,7 @@ const HomePage = () => {
   return (
     <div>
       <NavBar />
-      <div className="flex bg-gray-200 justify-between items-start gap-10 py-6 px-52">
+      <div className="flex bg-gray-200 justify-between items-start gap-10 py-6 px-24">
         <UserWidget userId={_id} />
         <MyPostWidget picturePath={picturePath} />
         <UserWidget userId={_id} />

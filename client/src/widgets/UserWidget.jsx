@@ -63,7 +63,7 @@ const UserWidget = ({ userId }) => {
           <GoLocation size={22} /> <span>{location}</span>
         </div>
         <div className="flex gap-3">
-          <HiOutlineBriefcase size={22} /> <span>{location}</span>
+          <HiOutlineBriefcase size={22} /> <span>{occupation}</span>
         </div>
       </div>
       <hr className="border-6 border-gray-300 my-4" />
